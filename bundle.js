@@ -260,7 +260,7 @@ var Person = function(px, py){
     this.xv = 0;
     this.yv = 0;
     this.onG = false;
-    this.c = '#ffffff';
+    this.c = '#ffffaa';
     this.sprites = [
         function (ctx, vp) {
             ctx.fillStyle = this.c;
