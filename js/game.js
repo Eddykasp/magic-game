@@ -161,6 +161,7 @@ function drawScreen() {
 
   enemies.forEach(enemy => {
     enemy.draw(ctx, viewport);
+    enemy.drawHealth(ctx,viewport);
   });
   player.draw(ctx, viewport);
   spells.forEach(spell => {

@@ -2,6 +2,7 @@ var Collidable = require('./collidable');
 
 var Enemy = function(px, py, tlx, tly, brx, bry, health){
   var collidable = new Collidable(px, py, tlx, tly, brx, bry);
+  collidable.maxHealth = health;
   collidable.health = health;
   collidable.isDead = false;
   collidable.resistances = [];
@@ -17,7 +18,15 @@ var Enemy = function(px, py, tlx, tly, brx, bry, health){
     if (collidable.health <= 0){
       collidable.isDead = true;
     }
-  }
+  };
+  collidable.drawHealth = function(ctx,vp){
+    
+    ctx.fillStyle = 'red';    
+    ctx.fillRect(collidable.pos.x + collidable.hitTL.x - vp.pos.x,
+      collidable.pos.y + collidable.hitTL.y - 5, 
+       Math.floor((collidable.hitBR.x - collidable.hitTL.x) * (collidable.health/collidable.maxHealth)),
+       3);
+  };
   return collidable;
 };
 
