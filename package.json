@@ -1,0 +1,11 @@
+{
+  "name": "magic-game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "browserify js/game.js -o bundle.js"
+  },
+  "author": "Max Kasperowski",
+  "license": "ISC"
+}
