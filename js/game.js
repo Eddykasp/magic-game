@@ -4,6 +4,8 @@ var Spell = require('./spell');
 var Element = require('./element');
 var Collidable = require('./collidable');
 var Enemy = require('./enemy');
+var Viewport = require('./viewport');
+var Level = require('./level');
 
 var grav = 0.5;
 var holdLeft = false;
@@ -16,12 +18,17 @@ var ctx;
 var testCollider = new Enemy(400,600,-10,-100,10,10,30);
 enemies = [testCollider];
 
+var level = new Level(1400, 1000);
+var viewport;
 var player = new Person(200, 200);
 var spells = [];
 
 window.onload = function() {
   canv = document.getElementById('gc');
   ctx = canv.getContext('2d');
+
+  viewport = new Viewport(0, level.height - canv.height,
+    canv.width, canv.height);
   game();
 };
 
@@ -96,7 +103,7 @@ function update() {
   if(holdRight) {
       player.xv = 4;
   }
-  player.move();
+  player.move(viewport, level);
   if (player.onG) {
       player.xv *= 0.2;
   } else {
@@ -153,11 +160,11 @@ function drawScreen() {
   ctx.fillRect(0, 0, canv.width, canv.height);
 
   enemies.forEach(enemy => {
-    enemy.draw(ctx);
+    enemy.draw(ctx, viewport);
   });
-  player.draw(ctx);
-  spells.forEach(element => {
-    element.draw(ctx);
+  player.draw(ctx, viewport);
+  spells.forEach(spell => {
+    spell.draw(ctx, viewport);
   });
 
 }

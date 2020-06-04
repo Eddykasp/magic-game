@@ -6,9 +6,9 @@ var Collidable = function(px, py, tlx, tly, brx, bry){
   this.hitBR = new Point(brx, bry);
   this.applyEffect = function(effectTick){};
   this.applyDamage = function(damage, damageType){};
-  this.draw = function(ctx){
+  this.draw = function(ctx,vp){
     ctx.fillStyle = 'white';
-    ctx.fillRect(this.pos.x + this.hitTL.x, this.pos.y + this.hitTL.y, this.hitBR.x-this.hitTL.x, this.hitBR.y-this.hitTL.y);
+    ctx.fillRect((this.pos.x + this.hitTL.x) - vp.pos.x, (this.pos.y + this.hitTL.y), this.hitBR.x-this.hitTL.x, this.hitBR.y-this.hitTL.y);
   };
 };
 

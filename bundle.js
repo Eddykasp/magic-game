@@ -7,11 +7,11 @@ var Bolt = function (px,py,xv,yv,damage){
   this.yv = yv;
   this.damage = damage;
 
-  this.draw = function(ctx,c1,c2){
+  this.draw = function(ctx,vp,c1,c2){
     ctx.fillStyle = c2;
-    ctx.fillRect(this.pos.x - 5, this.pos.y - 5, 10, 10);
+    ctx.fillRect((this.pos.x - 5) - vp.pos.x, (this.pos.y - 5), 10, 10);
     ctx.fillStyle = c1;
-    ctx.fillRect(this.pos.x - 3, this.pos.y - 3, 6, 6);
+    ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 3), 6, 6);
   };
 
   this.move = function () {       
@@ -25,7 +25,7 @@ var Bolt = function (px,py,xv,yv,damage){
 };
 
 module.exports = Bolt;
-},{"./point":7}],2:[function(require,module,exports){
+},{"./point":8}],2:[function(require,module,exports){
 var Point = require('./point');
 
 var Collidable = function(px, py, tlx, tly, brx, bry){
@@ -34,14 +34,14 @@ var Collidable = function(px, py, tlx, tly, brx, bry){
   this.hitBR = new Point(brx, bry);
   this.applyEffect = function(effectTick){};
   this.applyDamage = function(damage, damageType){};
-  this.draw = function(ctx){
+  this.draw = function(ctx,vp){
     ctx.fillStyle = 'white';
-    ctx.fillRect(this.pos.x + this.hitTL.x, this.pos.y + this.hitTL.y, this.hitBR.x-this.hitTL.x, this.hitBR.y-this.hitTL.y);
+    ctx.fillRect((this.pos.x + this.hitTL.x) - vp.pos.x, (this.pos.y + this.hitTL.y), this.hitBR.x-this.hitTL.x, this.hitBR.y-this.hitTL.y);
   };
 };
 
 module.exports = Collidable;
-},{"./point":7}],3:[function(require,module,exports){
+},{"./point":8}],3:[function(require,module,exports){
 var Element = function(name, c1, c2){
   this.name = name;
   this.c1 = c1
@@ -82,6 +82,8 @@ var Spell = require('./spell');
 var Element = require('./element');
 var Collidable = require('./collidable');
 var Enemy = require('./enemy');
+var Viewport = require('./viewport');
+var Level = require('./level');
 
 var grav = 0.5;
 var holdLeft = false;
@@ -94,12 +96,17 @@ var ctx;
 var testCollider = new Enemy(400,600,-10,-100,10,10,30);
 enemies = [testCollider];
 
+var level = new Level(1400, 1000);
+var viewport;
 var player = new Person(200, 200);
 var spells = [];
 
 window.onload = function() {
   canv = document.getElementById('gc');
   ctx = canv.getContext('2d');
+
+  viewport = new Viewport(0, level.height - canv.height,
+    canv.width, canv.height);
   game();
 };
 
@@ -174,7 +181,7 @@ function update() {
   if(holdRight) {
       player.xv = 4;
   }
-  player.move();
+  player.move(viewport, level);
   if (player.onG) {
       player.xv *= 0.2;
   } else {
@@ -231,15 +238,21 @@ function drawScreen() {
   ctx.fillRect(0, 0, canv.width, canv.height);
 
   enemies.forEach(enemy => {
-    enemy.draw(ctx);
+    enemy.draw(ctx, viewport);
   });
-  player.draw(ctx);
-  spells.forEach(element => {
-    element.draw(ctx);
+  player.draw(ctx, viewport);
+  spells.forEach(spell => {
+    spell.draw(ctx, viewport);
   });
 
 }
-},{"./bolt":1,"./collidable":2,"./element":3,"./enemy":4,"./person":6,"./spell":8}],6:[function(require,module,exports){
+},{"./bolt":1,"./collidable":2,"./element":3,"./enemy":4,"./level":6,"./person":7,"./spell":9,"./viewport":10}],6:[function(require,module,exports){
+var Level = function(w){
+  this.width = w;
+};
+
+module.exports = Level;
+},{}],7:[function(require,module,exports){
 var Point = require('./point');
 
 var Person = function(px, py){
@@ -249,62 +262,77 @@ var Person = function(px, py){
     this.onG = false;
     this.c = '#ffffff';
     this.sprites = [
-        function (ctx) {
+        function (ctx, vp) {
             ctx.fillStyle = this.c;
-            ctx.fillRect(this.pos.x - 5, this.pos.y - 17, 10, 17);
-            ctx.fillRect(this.pos.x - 4, this.pos.y - 18, 8, 1);
-            ctx.fillRect(this.pos.x - 3, this.pos.y - 19, 6, 1);
-            ctx.fillRect(this.pos.x - 2, this.pos.y - 20, 4, 1);
+            ctx.fillRect((this.pos.x - 5) - vp.pos.x, (this.pos.y - 17) , 10, 17);
+            ctx.fillRect((this.pos.x - 4) - vp.pos.x, (this.pos.y - 18) , 8, 1);
+            ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 19) , 6, 1);
+            ctx.fillRect((this.pos.x - 2) - vp.pos.x, (this.pos.y - 20) , 4, 1);
             ctx.fillStyle = 'black';
             if (this.xv > 0.05){
-                ctx.fillRect(this.pos.x + 1, this.pos.y - 17, 2, 3);
+                ctx.fillRect((this.pos.x + 1) - vp.pos.x, (this.pos.y - 17) , 2, 3);
             } else if (this.xv < -0.05) {
-                ctx.fillRect(this.pos.x - 3, this.pos.y - 17, 2, 3);
+                ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 17) , 2, 3);
             } else {
-                ctx.fillRect(this.pos.x + 1, this.pos.y - 17, 2, 3);
-                ctx.fillRect(this.pos.x - 3, this.pos.y - 17, 2, 3);
+                ctx.fillRect((this.pos.x + 1) - vp.pos.x, (this.pos.y - 17) , 2, 3);
+                ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 17) , 2, 3);
             }
         },
-        function (ctx) {
+        function (ctx,vp) {
             ctx.fillStyle = this.c;
-            ctx.fillRect(this.pos.x - 5, this.pos.y - 14, 10, 14);
-            ctx.fillRect(this.pos.x - 4, this.pos.y - 15, 8, 1);
-            ctx.fillRect(this.pos.x - 3, this.pos.y - 16, 6, 1);
-            ctx.fillRect(this.pos.x - 2, this.pos.y - 17, 4, 1);
-            ctx.fillRect(this.pos.x - 6, this.pos.y - 7, 12, 7);
+            ctx.fillRect((this.pos.x - 5) - vp.pos.x, (this.pos.y - 14) , 10, 14);
+            ctx.fillRect((this.pos.x - 4) - vp.pos.x, (this.pos.y - 15) , 8, 1);
+            ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 16) , 6, 1);
+            ctx.fillRect((this.pos.x - 2) - vp.pos.x, (this.pos.y - 17) , 4, 1);
+            ctx.fillRect((this.pos.x - 6) - vp.pos.x, (this.pos.y - 7) , 12, 7);
             ctx.fillStyle = 'black';
             if(this.xv > 0.05){
-                ctx.fillRect(this.pos.x + 1, this.pos.y - 15, 2, 3);
+                ctx.fillRect((this.pos.x + 1) - vp.pos.x, (this.pos.y - 15) , 2, 3);
             } else if(this.xv < -0.05){
-                ctx.fillRect(this.pos.x - 3, this.pos.y - 15, 2, 3);
+                ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 15) , 2, 3);
             } else {
-                ctx.fillRect(this.pos.x + 1, this.pos.y - 15, 2, 3);
-                ctx.fillRect(this.pos.x - 3, this.pos.y - 15, 2, 3);
+                ctx.fillRect((this.pos.x + 1) - vp.pos.x, (this.pos.y - 15) , 2, 3);
+                ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 15) , 2, 3);
             }
         },
-        function (ctx) {
+        function (ctx,vp) {
             ctx.fillStyle = this.c;
-            ctx.fillRect(this.pos.x - 5, this.pos.y - 13, 10, 13);
-            ctx.fillRect(this.pos.x - 4, this.pos.y - 14, 8, 1);
-            ctx.fillRect(this.pos.x - 3, this.pos.y - 15, 6, 1);
-            ctx.fillRect(this.pos.x - 2, this.pos.y - 16, 4, 1);
-            ctx.fillRect(this.pos.x - 6, this.pos.y - 10, 12, 9);
-            ctx.fillRect(this.pos.x - 7, this.pos.y - 8, 14, 7);
+            ctx.fillRect((this.pos.x - 5) - vp.pos.x, (this.pos.y - 13) , 10, 13);
+            ctx.fillRect((this.pos.x - 4) - vp.pos.x, (this.pos.y - 14) , 8, 1);
+            ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 15) , 6, 1);
+            ctx.fillRect((this.pos.x - 2) - vp.pos.x, (this.pos.y - 16) , 4, 1);
+            ctx.fillRect((this.pos.x - 6) - vp.pos.x, (this.pos.y - 10) , 12, 9);
+            ctx.fillRect((this.pos.x - 7) - vp.pos.x, (this.pos.y - 8) , 14, 7);
             ctx.fillStyle = 'black';
             if(this.xv > 0.05){
-                ctx.fillRect(this.pos.x + 1, this.pos.y - 15, 2, 3);
+                ctx.fillRect((this.pos.x + 1) - vp.pos.x, (this.pos.y - 15) , 2, 3);
             } else if(this.xv < -0.05){
-                ctx.fillRect(this.pos.x - 3, this.pos.y - 15, 2, 3);
+                ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 15) , 2, 3);
             } else {
-                ctx.fillRect(this.pos.x + 1, this.pos.y - 15, 2, 3);
-                ctx.fillRect(this.pos.x - 3, this.pos.y - 15, 2, 3);
+                ctx.fillRect((this.pos.x + 1) - vp.pos.x, (this.pos.y - 15) , 2, 3);
+                ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 15) , 2, 3);
             }
         }
     ];
     this.draw = this.sprites[1];
-    this.move = function () {
+    this.move = function (vp, level) {
         this.pos.x += this.xv;
         this.pos.y += this.yv;
+
+        
+        if (vp.pos.x >= 0 && vp.pos.x + vp.width <= level.width) {
+            if (this.pos.x - vp.pos.x > 300 && this.xv > 0){
+                vp.pos.x += this.xv;
+            } else if (this.pos.x - vp.pos.x > vp.width - 300 && this.xv < 0){
+                vp.pos.x += this.xv;
+            }
+            vp.pos.x += this.xv;
+        } else if (vp.pos.x < 0) {
+            vp.pos.x = 0;
+        } else if (vp.pos.x + vp.width > level.width) {
+            vp.pos.x = level.width - vp.width;
+        }
+        //vp.pos.y += this.yv;
     };
     this.update = function (holdUp) {
         // is called every frame
@@ -324,7 +352,7 @@ var Person = function(px, py){
 
 module.exports = Person;
 
-},{"./point":7}],7:[function(require,module,exports){
+},{"./point":8}],8:[function(require,module,exports){
 var Point = function(x, y){
     this.x = x;
     this.y = y;
@@ -332,7 +360,7 @@ var Point = function(x, y){
 
 module.exports = Point;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var Spell = function (element, types){
   this.element = element;
   this.types = types;
@@ -343,8 +371,8 @@ var Spell = function (element, types){
     this.types[this.phase].update();
   };
 
-  this.draw = function(ctx) {
-    this.types[0].draw(ctx,element.c1,element.c2);
+  this.draw = function(ctx, vp) {
+    this.types[0].draw(ctx,vp,element.c1,element.c2);
   };
 
   this.onScreen = function(canv){
@@ -376,4 +404,15 @@ var Spell = function (element, types){
 };
 
 module.exports = Spell;
-},{}]},{},[5]);
+},{}],10:[function(require,module,exports){
+var Point = require('./point');
+
+var Viewport = function(px,py,w,h){
+  this.pos = new Point(px,py);
+  this.width = w;
+  this.height = h;
+};
+
+module.exports = Viewport;
+
+},{"./point":8}]},{},[5]);

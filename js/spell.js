@@ -8,8 +8,8 @@ var Spell = function (element, types){
     this.types[this.phase].update();
   };
 
-  this.draw = function(ctx) {
-    this.types[0].draw(ctx,element.c1,element.c2);
+  this.draw = function(ctx, vp) {
+    this.types[0].draw(ctx,vp,element.c1,element.c2);
   };
 
   this.onScreen = function(canv){
