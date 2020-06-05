@@ -51,9 +51,9 @@ var Enemy = function(px, py, tlx, tly, brx, bry, health){
   collidable.logic = function(player){
     // default ai, move towards player
     if (this.pos.x < player.pos.x){
-      this.xv = 5;
+      this.xv = 3;
     } else {
-      this.xv = -5;
+      this.xv = -3;
     }
   };
   return collidable;
