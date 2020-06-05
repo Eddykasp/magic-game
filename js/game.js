@@ -111,10 +111,10 @@ function update() {
   }
 
   if (player.pos.x < 0) {
-      player.pos.x = canv.width;
+      player.pos.x = 0;
   }
   if (player.pos.x > canv.width) {
-      player.pos.x = 0;
+      player.pos.x = canv.width;
   }
   player.onG = false;
   
