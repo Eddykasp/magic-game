@@ -24,19 +24,25 @@ var Person = function(px, py){
             }
         },
         function (ctx,vp) {
-            ctx.fillStyle = this.c;
-            ctx.fillRect((this.pos.x - 5) - vp.pos.x, (this.pos.y - 14) , 10, 14);
-            ctx.fillRect((this.pos.x - 4) - vp.pos.x, (this.pos.y - 15) , 8, 1);
-            ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 16) , 6, 1);
-            ctx.fillRect((this.pos.x - 2) - vp.pos.x, (this.pos.y - 17) , 4, 1);
-            ctx.fillRect((this.pos.x - 6) - vp.pos.x, (this.pos.y - 7) , 12, 7);
+            ctx.fillStyle = '#3F5A77';
+            ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 21) , 7, 1);
+            ctx.fillRect((this.pos.x - 4) - vp.pos.x, (this.pos.y - 20) , 9, 20);
+            ctx.fillRect((this.pos.x - 5) - vp.pos.x, (this.pos.y - 7) , 11, 7);
+            ctx.fillRect((this.pos.x - 6) - vp.pos.x, (this.pos.y - 3) , 13, 3);
+            ctx.fillRect((this.pos.x - 7) - vp.pos.x, (this.pos.y - 1) , 15, 1);
             ctx.fillStyle = 'black';
-            if(this.xv > 0.05){
+            ctx.fillRect((this.pos.x - 2) - vp.pos.x, (this.pos.y - 18) , 5, 5);
+            ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 17) , 7, 3);
+            ctx.fillRect((this.pos.x - 1) - vp.pos.x, (this.pos.y - 14) , 3, 14);
+            ctx.fillStyle = '#E0BB00';
+            ctx.fillRect((this.pos.x - 4) - vp.pos.x, (this.pos.y - 13) , 4, 1);
+            ctx.fillRect((this.pos.x + 1) - vp.pos.x, (this.pos.y - 13) , 4, 1);
+            ctx.fillRect((this.pos.x - 1) - vp.pos.x, (this.pos.y - 13) , 1, 13);
+            ctx.fillRect((this.pos.x + 1) - vp.pos.x, (this.pos.y - 13) , 1, 13);
+            ctx.fillStyle = '#3F5A77'
+            if(this.xv > 0.05){    
                 ctx.fillRect((this.pos.x + 1) - vp.pos.x, (this.pos.y - 15) , 2, 3);
             } else if(this.xv < -0.05){
-                ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 15) , 2, 3);
-            } else {
-                ctx.fillRect((this.pos.x + 1) - vp.pos.x, (this.pos.y - 15) , 2, 3);
                 ctx.fillRect((this.pos.x - 3) - vp.pos.x, (this.pos.y - 15) , 2, 3);
             }
         },
