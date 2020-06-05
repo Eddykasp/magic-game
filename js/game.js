@@ -1,8 +1,8 @@
 var Person = require('./person');
 var Bolt = require('./bolt');
 var Spell = require('./spell');
+var AoESpell = require('./aoeSpell');
 var Element = require('./element');
-var Collidable = require('./collidable');
 var Enemy = require('./enemy');
 var Viewport = require('./viewport');
 var Level = require('./level');
@@ -16,7 +16,8 @@ var holdFire = false;
 var canv;
 var ctx;
 
-enemies = [new Troll(600,600)];
+var dummyCollider = new Enemy(0,0,0,0,0,0,100000);
+enemies = [dummyCollider, new Troll(600,600)];
 
 var level = new Level(1400, 1000);
 var viewport;
@@ -62,12 +63,16 @@ function keyDown(evt) {
         }
         spells.push(new Spell(new Element('poison', 'orange', 'red'),
         [new Bolt(
-          player.pos.x,
-          player.pos.y - 10,
-          10 * dir,
-          0,
-          10
-          )]));
+            player.pos.x,
+            player.pos.y - 10,
+            10 * dir,
+            0,
+            10
+          ),
+          new AoESpell(
+            0,0,2,10
+          )
+        ]));
       holdFire = true;
       }
       break;
@@ -133,17 +138,17 @@ function update() {
   });
   enemies = nextEnemies;
 
-  nextSpells = [];
+  nextSpells = [];  
   spells.forEach(spell => {    
     spell.update();
     
     enemies.forEach(enemy => {
       spell.collide(enemy);
     });
-    if (spell.phase < spell.types.length && spell.onScreen(canv)){
+    if (spell.phase < spell.types.length && spell.onScreen(canv)){      
       nextSpells.push(spell);      
-    }
-  });
+    }    
+  });  
   
   spells = nextSpells;  
 

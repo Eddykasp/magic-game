@@ -18,9 +18,6 @@ var Bolt = function (px,py,xv,yv,damage){
     this.pos.y += this.yv;
   };
 
-  this.update = function (){
-    
-  };
 };
 
 module.exports = Bolt;
