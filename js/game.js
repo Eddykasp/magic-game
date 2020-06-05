@@ -162,8 +162,13 @@ function update() {
 }
 
 function drawScreen() {
-  ctx.fillStyle = 'black';
-  ctx.fillRect(0, 0, canv.width, canv.height);
+  for (let i = 0; i<level.width/100; i++){
+    ctx.fillStyle = 'black';
+    ctx.fillRect((i * 100)-viewport.pos.x, 0, 100, canv.height);
+    i++;
+    ctx.fillStyle = 'white';
+    ctx.fillRect((i * 100)-viewport.pos.x, 0, 100, canv.height);
+  }
 
   enemies.forEach(enemy => {
     enemy.draw(ctx, viewport);
