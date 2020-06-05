@@ -172,5 +172,5 @@ function drawScreen() {
   spells.forEach(spell => {
     spell.draw(ctx, viewport);
   });
-
+  player.drawHUD(ctx);
 }

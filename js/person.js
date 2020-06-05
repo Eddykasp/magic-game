@@ -4,6 +4,7 @@ var Person = function(px, py){
     this.pos = new Point(px, py);
     this.xv = 0;
     this.yv = 0;
+    this.health = 100;
     this.onG = false;
     this.c = '#ffffaa';
     this.sprites = [
@@ -150,6 +151,14 @@ var Person = function(px, py){
                 ctx.fillRect((this.pos.x - 4) - vp.pos.x, (this.pos.y - 11) , 1, 1);
         }
     ];
+    this.drawHUD = function(ctx) {
+        ctx.fillStyle = 'red';
+        let displayedHealth = Math.floor(100*(this.health/100))
+        if (displayedHealth < 0) {
+            displayedHealth = 0;
+        }
+        ctx.fillRect(10,10, displayedHealth,10); 
+    };
     this.draw = this.sprites[0];
     this.move = function (vp, level) {
         this.pos.x += this.xv;

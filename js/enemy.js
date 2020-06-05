@@ -55,6 +55,14 @@ var Enemy = function(px, py, tlx, tly, brx, bry, health){
     } else {
       this.xv = -3;
     }
+    if (
+      player.pos.x >= collidable.pos.x + collidable.hitTL.x 
+      && player.pos.x <= collidable.pos.x + collidable.hitBR.x
+      && player.pos.y >= collidable.pos.y + collidable.hitTL.y
+      && player.pos.y <= collidable.pos.y + collidable.hitBR.y
+      ) {        
+        player.health -= 1;
+      }
   };
   return collidable;
 };
