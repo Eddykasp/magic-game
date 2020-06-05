@@ -21,7 +21,7 @@ enemies = [dummyCollider, new Troll(600,600)];
 
 var level = new Level(1400, 1000);
 var viewport;
-var player = new Person(200, 200);
+var player = new Person(200, 500);
 var spells = [];
 
 window.onload = function() {
@@ -133,6 +133,7 @@ function update() {
   nextEnemies = [];
   enemies.forEach(enemy =>{
     if (!enemy.isDead){
+      enemy.update(player);
       nextEnemies.push(enemy);
     }
   });

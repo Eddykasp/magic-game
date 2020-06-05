@@ -7,6 +7,8 @@ var Enemy = function(px, py, tlx, tly, brx, bry, health){
   collidable.isDead = false;
   collidable.resistances = [];
   collidable.weaknesses = [];
+  collidable.xv = 0;
+  collidable.yv = 0;
   collidable.applyDamage = function(damage, damageType){
     let modifier = 1;
     
@@ -29,6 +31,30 @@ var Enemy = function(px, py, tlx, tly, brx, bry, health){
       collidable.pos.y + collidable.hitTL.y - 5, 
        Math.floor((collidable.hitBR.x - collidable.hitTL.x) * (collidable.health/collidable.maxHealth)),
        3);
+  };
+  collidable.drawSprite = function(ctx,vp){
+
+  };
+  collidable.draw = function(ctx,vp){
+    collidable.drawSprite(ctx,vp);
+    collidable.drawHealth(ctx,vp);
+  };
+
+  collidable.update = function(player){
+    collidable.logic(player);
+    collidable.move();
+  };
+  collidable.move = function(){
+    this.pos.x += this.xv;
+    this.pos.y += this.yv;
+  };
+  collidable.logic = function(player){
+    // default ai, move towards player
+    if (this.pos.x < player.pos.x){
+      this.xv = 5;
+    } else {
+      this.xv = -5;
+    }
   };
   return collidable;
 };
