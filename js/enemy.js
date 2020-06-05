@@ -9,11 +9,14 @@ var Enemy = function(px, py, tlx, tly, brx, bry, health){
   collidable.weaknesses = [];
   collidable.applyDamage = function(damage, damageType){
     let modifier = 1;
-    if (damageType in collidable.resistances){
+    
+    
+    if (collidable.resistances.includes(damageType)){
       modifier = 0.5;
-    } else if (damageType in collidable.weaknesses){
+    } else if (collidable.weaknesses.includes(damageType)){
       modifier = 2;
     }
+    
     collidable.health -= modifier*damage;
     if (collidable.health <= 0){
       collidable.isDead = true;

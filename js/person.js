@@ -72,18 +72,12 @@ var Person = function(px, py){
 
         
         if (vp.pos.x >= 0 && vp.pos.x + vp.width <= level.width) {
-            if (this.pos.x - vp.pos.x > 300 && this.xv > 0){
-                vp.pos.x += this.xv;
-            } else if (this.pos.x - vp.pos.x > vp.width - 300 && this.xv < 0){
-                vp.pos.x += this.xv;
-            }
             vp.pos.x += this.xv;
-        } else if (vp.pos.x < 0) {
-            vp.pos.x = 0;
-        } else if (vp.pos.x + vp.width > level.width) {
-            vp.pos.x = level.width - vp.width;
+        } else if (vp.pos.x <= 0 && this.pos.x >= vp.width / 2 && this.xv > 0) {
+            vp.pos.x += this.xv;
+        } else if (vp.pos.x + vp.width >= level.width && this.pos.x <= level.width - (vp.width/2) && this.xv < 0){
+            vp.pos.x += this.xv;
         }
-        //vp.pos.y += this.yv;
     };
     this.update = function (holdUp) {
         // is called every frame
