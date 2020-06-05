@@ -6,6 +6,7 @@ var Collidable = require('./collidable');
 var Enemy = require('./enemy');
 var Viewport = require('./viewport');
 var Level = require('./level');
+var Troll = require('./enemies/troll');
 
 var grav = 0.5;
 var holdLeft = false;
@@ -15,8 +16,7 @@ var holdFire = false;
 var canv;
 var ctx;
 
-var testCollider = new Enemy(400,600,-10,-100,10,10,30);
-enemies = [testCollider];
+enemies = [new Troll(600,600)];
 
 var level = new Level(1400, 1000);
 var viewport;
@@ -60,7 +60,7 @@ function keyDown(evt) {
         if (player.xv != 0){
             dir = player.xv / Math.abs(player.xv);
         }
-        spells.push(new Spell(new Element('fire', 'orange', 'red'),
+        spells.push(new Spell(new Element('poison', 'orange', 'red'),
         [new Bolt(
           player.pos.x,
           player.pos.y - 10,
@@ -161,7 +161,6 @@ function drawScreen() {
 
   enemies.forEach(enemy => {
     enemy.draw(ctx, viewport);
-    enemy.drawHealth(ctx,viewport);
   });
   player.draw(ctx, viewport);
   spells.forEach(spell => {
