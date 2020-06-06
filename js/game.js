@@ -70,7 +70,7 @@ function keyDown(evt) {
             10
           ),
           new AoESpell(
-            0,0,2,10
+            0,0,5,150
           )
         ]));
       holdFire = true;
@@ -142,7 +142,7 @@ function update() {
   nextSpells = [];  
   spells.forEach(spell => {    
     spell.update();
-    
+    spell.collide(player);
     enemies.forEach(enemy => {
       spell.collide(enemy);
     });

@@ -2,9 +2,20 @@ var Spell = function (element, types){
   this.element = element;
   this.types = types;
   this.phase = 0; 
+  this.nextPhase = false;
 
-  this.update = function() {
+  this.update = function() {    
     this.types[this.phase].move();
+    if (this.nextPhase){
+      let x = this.types[this.phase].pos.x;
+      let y = this.types[this.phase].pos.y;
+      this.phase += 1;
+      if (this.phase < this.types.length){
+        this.types[this.phase].pos.x = x;
+        this.types[this.phase].pos.y = y;
+      }
+      this.nextPhase = false;
+    }
   };
 
   this.draw = function(ctx, vp) {
@@ -31,11 +42,7 @@ var Spell = function (element, types){
           && y <= collidable.pos.y + collidable.hitBR.y){
             collidable.applyEffect(this.element.effectTick);
             collidable.applyDamage(this.types[this.phase].damage, this.element.name);
-            this.phase += 1;
-            if (this.phase < this.types.length){
-              this.types[this.phase].pos.x = x;
-              this.types[this.phase].pos.y = y;
-            }
+            this.nextPhase = true;
             
           }
       } else {
@@ -48,11 +55,7 @@ var Spell = function (element, types){
         }
   
         if (this.types[this.phase].framesLeft < 0) {
-          this.phase += 1;
-          if (this.phase < this.types.length){          
-            this.types[this.phase].pos.x = x;
-            this.types[this.phase].pos.y = y;
-          }
+          this.nextPhase = true;
         }
       }
     }    
