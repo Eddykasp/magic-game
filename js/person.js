@@ -6,9 +6,7 @@ var Person = function(px, py){
     collidable.yv = 0;
     collidable.health = 100;
     collidable.onG = false;
-    this.applyDamage = function(damage, damageType){
-        console.log('dmg');
-        
+    this.applyDamage = function(damage, damageType){        
         collidable.health -= damage;
     };
     collidable.c = '#ffffaa';
