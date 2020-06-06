@@ -118,8 +118,8 @@ function update() {
   if (player.pos.x < 0) {
       player.pos.x = 0;
   }
-  if (player.pos.x > canv.width) {
-      player.pos.x = canv.width;
+  if (player.pos.x - viewport.pos.x > canv.width) {
+      player.pos.x = canv.width + viewport.pos.x;
   }
   player.onG = false;
   
@@ -164,10 +164,10 @@ function update() {
 function drawScreen() {
   for (let i = 0; i<level.width/100; i++){
     ctx.fillStyle = 'black';
-    ctx.fillRect((i * 100)-viewport.pos.x, 0, 100, canv.height);
+    ctx.fillRect((i * 100)-viewport.pos.x, 0, 110, canv.height);
     i++;
     ctx.fillStyle = 'white';
-    ctx.fillRect((i * 100)-viewport.pos.x, 0, 100, canv.height);
+    ctx.fillRect((i * 100)-viewport.pos.x, 0, 110, canv.height);
   }
 
   enemies.forEach(enemy => {
