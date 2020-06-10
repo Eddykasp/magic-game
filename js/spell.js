@@ -22,10 +22,10 @@ var Spell = function (element, types){
     this.types[this.phase].draw(ctx,vp,element.c1,element.c2);
   };
 
-  this.onScreen = function(canv){
+  this.onScreen = function(canv, vp){
     let x = this.types[this.phase].pos.x;
     let y = this.types[this.phase].pos.y;
-    return x >= 0 && x <= canv.width && y >= 0 && y <= canv.height;
+    return x >= 0 && x <= canv.width + vp.pos.x && y >= 0 && y <= canv.height;
   };
   
   this.collide = function (collidable){
